@@ -1,8 +1,24 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from resources import UserResource
+from exts import db , api
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
-db = SQLAlchemy(app)
+def create_app() :
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////user.db'
+    register_extensions(app)
+    return app
 
+def register_extensions(app) :
+
+    db.init_app(app)
+    api.init_app(app)
+    # api.add_resource(UserResource, '/api/user', '/api/user/<string:username>')
+    with app.app_context():
+        db.create_all()
+    
+    
+
+if __name__ == "__main__":
+    app = create_app()
+    app.run(debug=True)
 
