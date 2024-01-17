@@ -1,6 +1,8 @@
 from flask import Flask
-from resources import UserResource
-from exts import db , api
+from resources.user import UserResource
+from resources.home import HomeResource
+from exts import db 
+from flask_restful import Api
 
 def create_app() :
     app = Flask(__name__)
@@ -11,8 +13,9 @@ def create_app() :
 def register_extensions(app) :
 
     db.init_app(app)
-    api.init_app(app)
-    # api.add_resource(UserResource, '/api/user', '/api/user/<string:username>')
+    api = Api(app)
+    api.add_resource(HomeResource,'/')
+    api.add_resource(UserResource, '/api/user', '/api/user/<string:username>')
     with app.app_context():
         db.create_all()
     
